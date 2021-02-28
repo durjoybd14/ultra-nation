@@ -1,31 +1,39 @@
-import { useEffect, useState } from 'react';
-import Cart from './components/Country/Cart/Cart';
-import Country from './components/Country/Country';
+import { useEffect, useState } from "react";
+import Country from "./components/Country/Country";
+import TotalPopulation from "./components/Country/TotalPopulation/TotalPopulation";
+
 
 function App() {
   const [countries, setCountries] = useState([]);
   useEffect(() => {
-    const url = `https://restcountries.eu/rest/v2/all`;
-    fetch(url)
+    fetch(`https://restcountries.eu/rest/v2/all`)
       .then(res => res.json())
       .then(data => setCountries(data))
-  }, [])    //[] how many times repeated
+    // .catch(alert('Error'));
+  }, []) //[] how many times repeat
 
-  const [cart, setCart] = useState([]);
-
-  const handleCountryAdd = (country) => {
-    const newCart = [...cart, country];
-    setCart(newCart);
+  const [cart, setCart] = useState([])
+  const handleAdd = (country) => {
+    const newCart = [...cart, country]
+    setCart(newCart)
   }
-  return (
-    <div style={{ textAlign: 'center' }}>
-      <h2 >Country Loaded: {countries.length}</h2>
-      <h2 >Country Added: {cart.length}</h2>
-      <Cart cart={cart}></Cart>
 
-      {
-        countries.map(country => <Country country={country} key={country.name} handleCountryAdd={handleCountryAdd}></Country>)
-      }
+
+  return (
+
+    <div style={{ textAlign: 'center' }}>
+      <h1>Total Country: {cart.length} </h1>
+      <TotalPopulation cart={cart}></TotalPopulation>
+
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(3,1fr)'
+      }}>
+        {
+          countries.map(country => <Country country={country} handleAdd={handleAdd} key={country.name}></Country>)
+        }
+
+      </div>
     </div>
   );
 }
